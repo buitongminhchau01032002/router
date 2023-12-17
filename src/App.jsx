@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useContext } from 'react';
 import { createContext } from 'react';
 import { BrowserRouter, Routes, Route, Link, useParams } from 'react-router-dom';
+import './style.css';
 const UserContext = createContext({});
 
 function HomePage() {
@@ -44,17 +45,47 @@ function Header() {
 
     return (
         <div>
-            {user ? (
-                <div>
-                    <span>{user.name}</span>
-                    <button onClick={() => setUser(null)}>Đăng xuất</button>
+            <div>
+                {user ? (
+                    <div>
+                        <span>{user.name}</span>
+                        <button onClick={() => setUser(null)}>Đăng xuất</button>
+                    </div>
+                ) : (
+                    <p>Chưa đăng nhập</p>
+                )}
+            </div>
+
+            {/* NAV ITEM */}
+            <div className="menu" style={{ background: 'red', position: 'relative' }}>
+                <button>Item</button>
+                <div
+                    className="submenu"
+                    style={{ position: 'absolute', top: '100%', background: 'blue' }}
+                >
+                    <ul>
+                        <li>Sub item 1</li>
+                        <li>Sub item 2</li>
+                        <li>Sub item 3</li>
+                        <li>Sub item 4</li>
+                    </ul>
                 </div>
-            ) : (
-                <p>Chưa đăng nhập</p>
-            )}
+            </div>
         </div>
     );
 }
+
+function AboutPage() {
+    return <h1>About</h1>;
+}
+
+const routes = [
+    { path: '/', component: HomePage },
+    { path: '/products', component: ProductsPage },
+    { path: '/products/:name', component: ProductDeatailPage },
+    { path: '/login', component: LoginPage },
+    { path: '/about', component: AboutPage },
+];
 
 function App() {
     const [user, setUser] = useState(null);
@@ -63,10 +94,10 @@ function App() {
             <BrowserRouter>
                 <Header />
                 <Routes>
-                    <Route path="/" element={<HomePage />} />
-                    <Route path="/products" element={<ProductsPage />} />
-                    <Route path="/products/:name" element={<ProductDeatailPage />} />
-                    <Route path="/login" element={<LoginPage />} />
+                    {routes.map((route) => {
+                        const Comp = route.component;
+                        return <Route path={route.path} element={<Comp />} />;
+                    })}
                 </Routes>
                 <div>footer</div>
             </BrowserRouter>
